@@ -1,0 +1,5 @@
+venv
+private.py
+jogadas.db
+.idea
+__pycache__
