@@ -14,17 +14,11 @@ class ScrapingCrash:
     def __init__(self):
         self.navegador = None
         self.driver = None
-        self.entrar = None
-        self.site = None
-        self.resultados = None
 
         self.configura_driver_de_navegacao()
         self.acessa_urls()
         self.efetua_login()
         self.captura_numeros_sorteados()
-        # self.gera_conteudo_html()
-        # self.procura_tabela_de_jogadas()
-        # self.imprime_resultados_das_jogadas()
 
     def configura_driver_de_navegacao(self):
         options = Options()
@@ -57,26 +51,19 @@ class ScrapingCrash:
         sleep(3)
 
     def captura_numeros_sorteados(self):
+        numeros_sorteados = []
+        resultado_atual = self.driver.find_element(By.XPATH, '//*[@id="crash-recent"]/div[2]/div/span[1]').text
+        resultado_atual = resultado_atual.replace('X', '')
+
         while True:
-            numeros_sorteados = self.driver.find_element(By.XPATH, '//*[@id="crash-recent"]/div[2]/div/span[1]')
-            print(numeros_sorteados.text)
-            sleep(15)
+            novo_resultado = self.driver.find_element(By.XPATH, '//*[@id="crash-recent"]/div[2]/div/span[1]').text
+            novo_resultado = novo_resultado.replace('X', '')
 
-
-    input(' ')
-    # def gera_conteudo_html(self):
-    #     conteudo_html = self.driver.page_source
-    #     self.site = BeautifulSoup(conteudo_html, 'html.parser')
-    #     return self.site
-    #
-    # def procura_tabela_de_jogadas(self):
-    #     jogadas = self.site.find('div', attrs={'class': 'entries'})
-    #     self.resultados = jogadas.getText()
-    #     return self.resultados
-    #
-    # def imprime_resultados_das_jogadas(self):
-    #     resultados_final = str(self.resultados.split('X'))
-    #     print(resultados_final)
+            if resultado_atual != novo_resultado:
+                numeros_sorteados.append(novo_resultado)
+                print(numeros_sorteados)
+                resultado_atual = novo_resultado
+            sleep(4)
 
 
 if __name__ == '__main__':
