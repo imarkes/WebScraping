@@ -17,6 +17,8 @@ class ScrapingCrash:
         self.configura_driver_de_navegacao()
         self.acessa_urls()
         self.captura_numeros_sorteados()
+        self.cria_csv_com_resultados()
+        self.sair_da_aplicacao()
 
     def configura_driver_de_navegacao(self):
         options = Options()
@@ -35,20 +37,22 @@ class ScrapingCrash:
         resultado_atual = self.driver.find_element(By.XPATH, '//*[@id="crash-recent"]/div[2]/div/span[1]').text
         resultado_atual = resultado_atual.replace('X', '')
 
-        while True:
+        contador = 0
+        while contador <= 300:
             novo_resultado = self.driver.find_element(By.XPATH, '//*[@id="crash-recent"]/div[2]/div/span[1]').text
             novo_resultado = novo_resultado.replace('X', '')
 
             if resultado_atual != novo_resultado:
-                self.numeros_sorteados.append(novo_resultado)
+
+                self.numeros_sorteados.append({'numero': novo_resultado})
                 print(self.numeros_sorteados)
                 resultado_atual = novo_resultado
 
-            sleep(4)
+                contador += 1
 
     def cria_csv_com_resultados(self):
-        df = pd.Dataframe(self.numeros_sorteados)
-        df.to_csv('./numeros_sorteados.csv', sep=',',  encoding='utf-8', index_label='Numeros')
+        df = pd.DataFrame(self.numeros_sorteados)
+        df.to_csv('./numeros_sorteados3.csv', sep=',', encoding='utf-8')
 
     def sair_da_aplicacao(self):
         self.driver.quit()
@@ -56,6 +60,4 @@ class ScrapingCrash:
 
 if __name__ == '__main__':
     ScrapingCrash()
-    sleep(300)
-    ScrapingCrash().cria_csv_com_resultados()
-    ScrapingCrash().sair_da_aplicacao()
+
